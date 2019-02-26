@@ -1,0 +1,14 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "hive-standup-ts-20190226203757-authRole",
+            "UnauthRoleArn": "arn:aws:iam::925200761983:role/hive-standup-ts-20190226203757-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::925200761983:role/hive-standup-ts-20190226203757-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "hive-standup-ts-20190226203757-deployment",
+            "UnauthRoleName": "hive-standup-ts-20190226203757-unauthRole",
+            "StackName": "hive-standup-ts-20190226203757",
+            "StackId": "arn:aws:cloudformation:eu-west-1:925200761983:stack/hive-standup-ts-20190226203757/66a7f990-3a06-11e9-b572-02d10c0c2aa0"
+        }
+    }
+}
