@@ -1,0 +1,20 @@
+{
+    "appName": "hivestandup",
+    "roleName": "pinpointLambdaRole15b4e5e8",
+    "cloudWatchPolicyName": "cloudWatchPolicy15b4e5e8",
+    "pinpointPolicyName": "pinpointPolicy15b4e5e8",
+    "authPolicyName": "pinpoint_amplify_15b4e5e8",
+    "unauthPolicyName": "pinpoint_amplify_15b4e5e8",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}

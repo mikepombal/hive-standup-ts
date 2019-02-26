@@ -1,1 +1,14 @@
-{}
+{
+	"auth": {
+		"cognito1b2fea4c": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation"
+		}
+	},
+	"analytics": {
+		"hivestandup": {
+			"service": "Pinpoint",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}
