@@ -25,7 +25,7 @@ class App extends Component<Props, State> {
 
     handleAnalyticsClick = () => {
         console.log('handleAnalyticsClick');
-        Analytics.record('AWS Amplify Tutorial Event').then(evt => {
+        Analytics.record('Test Analytics').then(evt => {
             const url =
                 'https://' +
                 awsconfig.aws_project_region +
@@ -59,7 +59,7 @@ class App extends Component<Props, State> {
                 </header>
                 <div className="App-intro">
                     <button className="App-button" onClick={this.handleAnalyticsClick}>
-                        Generate Analytics Event
+                        Generate Analytics Event (test v2)
                     </button>
                     <div>{this.state.eventsSent}</div>
                     <div>{this.state.resultHtml}</div>

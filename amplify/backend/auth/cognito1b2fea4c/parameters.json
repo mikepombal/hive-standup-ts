@@ -1,14 +1,6 @@
 {
-    "identityPoolName": "hive_standup_ts_identitypool_951af028",
-    "allowUnauthenticatedIdentities": true,
-    "thirdPartyAuth": false,
-    "lambdaLogPolicy": "hive_standup_ts_lambda_log_policy",
-    "openIdLambdaRoleName": "hive_standup_ts_openid_lambda_role",
-    "openIdRolePolicy": "hive_standup_ts_openid_pass_role_policy",
-    "openIdLambdaIAMPolicy": "hive_standup_ts_openid_lambda_iam_policy",
-    "openIdLogPolicy": "hive_standup_ts_openid_lambda_log_policy",
-    "authSelections": "identityPoolOnly",
     "resourceName": "cognito1b2fea4c",
+    "authSelections": "identityPoolAndUserPool",
     "authRoleName": {
         "Ref": "AuthRoleName"
     },
@@ -26,5 +18,54 @@
             "UnauthRole",
             "Arn"
         ]
-    }
+    },
+    "userPoolName": "cognito1b2fea4c_userpool_a62814b7",
+    "autoVerifiedAttributes": [
+        "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+        "SMS Text Message"
+    ],
+    "roleName": "cognito1b2fea4c_sns-role",
+    "roleExternalId": "cognito1b2fea4c_role_external_id",
+    "policyName": "cognito1b2fea4c-sns-policy",
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [
+        "Requires Lowercase",
+        "Requires Uppercase",
+        "Requires Numbers",
+        "Requires Symbols"
+    ],
+    "requiredAttributes": [
+        "email"
+    ],
+    "userpoolClientName": "cognito1b2fea4c_app_client",
+    "userpoolClientGenerateSecret": true,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientReadAttributes": [
+        "email"
+    ],
+    "mfaLambdaRole": "cognito1b2fea4c_totp_lambda_role",
+    "mfaLambdaLogPolicy": "cognito1b2fea4c_totp_lambda_log_policy",
+    "mfaPassRolePolicy": "cognito1b2fea4c_totp_pass_role_policy",
+    "mfaLambdaIAMPolicy": "cognito1b2fea4c_totp_lambda_iam_policy",
+    "userpoolClientLambdaRole": "cognito1b2fea4c_userpoolclient_lambda_role",
+    "userpoolClientLogPolicy": "cognito1b2fea4c_userpoolclient_lambda_log_policy",
+    "userpoolClientLambdaPolicy": "cognito1b2fea4c_userpoolclient_lambda_iam_policy",
+    "userpoolClientSetAttributes": false,
+    "identityPoolName": "hive_standup_ts_identitypool_951af028",
+    "allowUnauthenticatedIdentities": false,
+    "thirdPartyAuth": false,
+    "lambdaLogPolicy": "cognito1b2fea4c_lambda_log_policy",
+    "openIdLambdaRoleName": "cognito1b2fea4c_openid_lambda_role",
+    "openIdRolePolicy": "cognito1b2fea4c_openid_pass_role_policy",
+    "openIdLambdaIAMPolicy": "cognito1b2fea4c_openid_lambda_iam_policy",
+    "openIdLogPolicy": "cognito1b2fea4c_openid_lambda_log_policy",
+    "useDefault": "default"
 }
