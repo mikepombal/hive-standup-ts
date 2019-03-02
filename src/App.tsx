@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Auth from '@aws-amplify/auth';
 import Analytics from '@aws-amplify/analytics';
+import { withAuthenticator } from 'aws-amplify-react';
 
 import awsconfig from './aws-exports';
 
@@ -69,4 +70,4 @@ class App extends Component<Props, State> {
     }
 }
 
-export default App;
+export default withAuthenticator(App);
