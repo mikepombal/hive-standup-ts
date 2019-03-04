@@ -24,6 +24,13 @@ class App extends Component<Props, State> {
         resultHtml: <div />,
     };
 
+    logout = () => {
+        Auth.signOut()
+            .then(data => console.log(data))
+            .catch(err => console.log(err));
+        console.log('Logged out');
+    };
+
     handleAnalyticsClick = () => {
         console.log('handleAnalyticsClick');
         Analytics.record('Test Analytics').then(evt => {
@@ -59,6 +66,10 @@ class App extends Component<Props, State> {
                     <p>Standup!!!</p>
                 </header>
                 <div className="App-intro">
+                    <button className="App-button" onClick={this.logout}>
+                        Log out
+                    </button>
+                    <hr />
                     <button className="App-button" onClick={this.handleAnalyticsClick}>
                         Generate Analytics Event (test v2)
                     </button>
