@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import './App.css';
 import Auth from '@aws-amplify/auth';
 import Analytics from '@aws-amplify/analytics';
+import { API, graphqlOperation } from 'aws-amplify';
 import { withAuthenticator } from 'aws-amplify-react';
 
 import awsconfig from './aws-exports';
+import * as queries from './graphql/queries';
+import * as mutations from './graphql/mutations';
 
 // retrieve temporary AWS credentials and sign requests
 Auth.configure(awsconfig);
 // send analytics events to Amazon Pinpoint
 Analytics.configure(awsconfig);
+API.configure(awsconfig);
 
 interface Props {}
 interface State {
@@ -59,6 +63,24 @@ class App extends Component<Props, State> {
         });
     };
 
+    getTasksList = async () => {
+        const allTasks = await API.graphql(graphqlOperation(queries.listTasks));
+        console.log('Get the list of tasks', allTasks);
+        const oneTask = await API.graphql(
+            graphqlOperation(queries.getTask, { id: 'deb60986-4bcf-441b-b3c6-ef5af31a232a' })
+        );
+        console.log('Get the task', oneTask);
+    };
+
+    createTask = async () => {
+        const task = {
+            title: 'This task is for Alex',
+            description: 'Steve gerard...',
+        };
+        const newTask = await API.graphql(graphqlOperation(mutations.createTask, { input: task }));
+        console.log(newTask);
+    };
+
     render() {
         return (
             <div className="App">
@@ -75,6 +97,13 @@ class App extends Component<Props, State> {
                     </button>
                     <div>{this.state.eventsSent}</div>
                     <div>{this.state.resultHtml}</div>
+                    <hr />
+                    <button className="App-button" onClick={this.getTasksList}>
+                        Get list of tasks
+                    </button>
+                    <button className="App-button" onClick={this.createTask}>
+                        Create task
+                    </button>
                 </div>
             </div>
         );
