@@ -33,6 +33,24 @@ export type DeletePrivateNoteInput = {
   id?: string | null,
 };
 
+export type CreatePersonInput = {
+  username: string,
+  name: string,
+  surname: string,
+  active: boolean,
+};
+
+export type UpdatePersonInput = {
+  username?: string | null,
+  name?: string | null,
+  surname?: string | null,
+  active?: boolean | null,
+};
+
+export type DeletePersonInput = {
+  id?: string | null,
+};
+
 export type ModelTaskFilterInput = {
   id?: ModelIDFilterInput | null,
   title?: ModelStringFilterInput | null,
@@ -75,6 +93,21 @@ export type ModelPrivateNoteFilterInput = {
   and?: Array< ModelPrivateNoteFilterInput | null > | null,
   or?: Array< ModelPrivateNoteFilterInput | null > | null,
   not?: ModelPrivateNoteFilterInput | null,
+};
+
+export type ModelPersonFilterInput = {
+  username?: ModelStringFilterInput | null,
+  name?: ModelStringFilterInput | null,
+  surname?: ModelStringFilterInput | null,
+  active?: ModelBooleanFilterInput | null,
+  and?: Array< ModelPersonFilterInput | null > | null,
+  or?: Array< ModelPersonFilterInput | null > | null,
+  not?: ModelPersonFilterInput | null,
+};
+
+export type ModelBooleanFilterInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
 };
 
 export type CreateTaskMutationVariables = {
@@ -155,6 +188,48 @@ export type DeletePrivateNoteMutation = {
   } | null,
 };
 
+export type CreatePersonMutationVariables = {
+  input: CreatePersonInput,
+};
+
+export type CreatePersonMutation = {
+  createPerson:  {
+    __typename: "Person",
+    username: string,
+    name: string,
+    surname: string,
+    active: boolean,
+  } | null,
+};
+
+export type UpdatePersonMutationVariables = {
+  input: UpdatePersonInput,
+};
+
+export type UpdatePersonMutation = {
+  updatePerson:  {
+    __typename: "Person",
+    username: string,
+    name: string,
+    surname: string,
+    active: boolean,
+  } | null,
+};
+
+export type DeletePersonMutationVariables = {
+  input: DeletePersonInput,
+};
+
+export type DeletePersonMutation = {
+  deletePerson:  {
+    __typename: "Person",
+    username: string,
+    name: string,
+    surname: string,
+    active: boolean,
+  } | null,
+};
+
 export type GetTaskQueryVariables = {
   id: string,
 };
@@ -219,6 +294,40 @@ export type ListPrivateNotesQuery = {
   } | null,
 };
 
+export type GetPersonQueryVariables = {
+  id: string,
+};
+
+export type GetPersonQuery = {
+  getPerson:  {
+    __typename: "Person",
+    username: string,
+    name: string,
+    surname: string,
+    active: boolean,
+  } | null,
+};
+
+export type ListPersonsQueryVariables = {
+  filter?: ModelPersonFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListPersonsQuery = {
+  listPersons:  {
+    __typename: "ModelPersonConnection",
+    items:  Array< {
+      __typename: "Person",
+      username: string,
+      name: string,
+      surname: string,
+      active: boolean,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
 export type OnCreateTaskSubscription = {
   onCreateTask:  {
     __typename: "Task",
@@ -270,5 +379,35 @@ export type OnDeletePrivateNoteSubscription = {
     __typename: "PrivateNote",
     id: string,
     content: string,
+  } | null,
+};
+
+export type OnCreatePersonSubscription = {
+  onCreatePerson:  {
+    __typename: "Person",
+    username: string,
+    name: string,
+    surname: string,
+    active: boolean,
+  } | null,
+};
+
+export type OnUpdatePersonSubscription = {
+  onUpdatePerson:  {
+    __typename: "Person",
+    username: string,
+    name: string,
+    surname: string,
+    active: boolean,
+  } | null,
+};
+
+export type OnDeletePersonSubscription = {
+  onDeletePerson:  {
+    __typename: "Person",
+    username: string,
+    name: string,
+    surname: string,
+    active: boolean,
   } | null,
 };

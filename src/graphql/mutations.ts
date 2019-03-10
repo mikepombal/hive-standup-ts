@@ -49,3 +49,30 @@ export const deletePrivateNote = `mutation DeletePrivateNote($input: DeletePriva
   }
 }
 `;
+export const createPerson = `mutation CreatePerson($input: CreatePersonInput!) {
+  createPerson(input: $input) {
+    username
+    name
+    surname
+    active
+  }
+}
+`;
+export const updatePerson = `mutation UpdatePerson($input: UpdatePersonInput!) {
+  updatePerson(input: $input) {
+    username
+    name
+    surname
+    active
+  }
+}
+`;
+export const deletePerson = `mutation DeletePerson($input: DeletePersonInput!) {
+  deletePerson(input: $input) {
+    username
+    name
+    surname
+    active
+  }
+}
+`;

@@ -49,3 +49,30 @@ export const onDeletePrivateNote = `subscription OnDeletePrivateNote {
   }
 }
 `;
+export const onCreatePerson = `subscription OnCreatePerson {
+  onCreatePerson {
+    username
+    name
+    surname
+    active
+  }
+}
+`;
+export const onUpdatePerson = `subscription OnUpdatePerson {
+  onUpdatePerson {
+    username
+    name
+    surname
+    active
+  }
+}
+`;
+export const onDeletePerson = `subscription OnDeletePerson {
+  onDeletePerson {
+    username
+    name
+    surname
+    active
+  }
+}
+`;
