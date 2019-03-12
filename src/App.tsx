@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import { Box, Grommet } from 'grommet';
 import Auth from '@aws-amplify/auth';
 import Analytics from '@aws-amplify/analytics';
 import { API, graphqlOperation } from 'aws-amplify';
@@ -14,6 +14,15 @@ Auth.configure(awsconfig);
 // send analytics events to Amazon Pinpoint
 Analytics.configure(awsconfig);
 API.configure(awsconfig);
+
+const theme = {
+    global: {
+        font: {
+            size: '14px',
+            height: '20px',
+        },
+    },
+};
 
 interface Props {}
 interface State {
@@ -81,12 +90,32 @@ class App extends Component<Props, State> {
         console.log(newTask);
     };
 
+    createPerson = async () => {
+        const person = {
+            username: 'mikepombal',
+            name: 'Mickael',
+            surname: 'Marques',
+            active: true,
+        };
+        const newPerson = await API.graphql(graphqlOperation(mutations.createPerson, { input: person }));
+        console.log(newPerson);
+    };
+
     render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    <p>Standup!!!</p>
-                </header>
+            <Grommet theme={theme}>
+                <Box
+                    tag="header"
+                    direction="row"
+                    align="center"
+                    justify="between"
+                    background="brand"
+                    pad={{ left: 'medium', right: 'small', vertical: 'small' }}
+                    elevation="medium"
+                    style={{ zIndex: 1 }}
+                >
+                    Standup!!!
+                </Box>
                 <div className="App-intro">
                     <button className="App-button" onClick={this.logout}>
                         Log out
@@ -101,11 +130,11 @@ class App extends Component<Props, State> {
                     <button className="App-button" onClick={this.getTasksList}>
                         Get list of tasks
                     </button>
-                    <button className="App-button" onClick={this.createTask}>
-                        Create task
+                    <button className="App-button" onClick={this.createPerson}>
+                        Create Person
                     </button>
                 </div>
-            </div>
+            </Grommet>
         );
     }
 }
