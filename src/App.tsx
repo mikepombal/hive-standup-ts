@@ -9,6 +9,8 @@ import awsconfig from './aws-exports';
 import * as queries from './graphql/queries';
 import * as mutations from './graphql/mutations';
 
+import PeoplePage from './people/PeoplePage';
+
 // retrieve temporary AWS credentials and sign requests
 Auth.configure(awsconfig);
 // send analytics events to Amazon Pinpoint
@@ -102,15 +104,7 @@ class App extends Component<Props, State> {
                         <Button label="Log out" onClick={this.logout} />
                     </Box>
 
-                    <Box
-                        gridArea="sidebar"
-                        background="accent-2"
-                        width="small"
-                        animation={[
-                            { type: 'fadeIn', duration: 300 },
-                            { type: 'slideRight', size: 'xlarge', duration: 150 },
-                        ]}
-                    >
+                    <Box gridArea="sidebar" background="accent-2" width="small">
                         {[].map(name => (
                             <Button key={name} href="#" hoverIndicator>
                                 <Box pad={{ horizontal: 'medium', vertical: 'small' }}>
@@ -120,12 +114,7 @@ class App extends Component<Props, State> {
                         ))}
                     </Box>
                     <Box gridArea="main" justify="center" align="center" background="accent-3">
-                        <button className="App-button" onClick={this.getTasksList}>
-                            Get list of tasks
-                        </button>
-                        <button className="App-button" onClick={this.createPerson}>
-                            Create Person
-                        </button>
+                        <PeoplePage />
                     </Box>
                 </Grid>
             </Grommet>
