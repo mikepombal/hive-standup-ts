@@ -34,6 +34,7 @@ export type DeletePrivateNoteInput = {
 };
 
 export type CreatePersonInput = {
+  id?: string | null,
   username: string,
   name: string,
   surname: string,
@@ -41,6 +42,7 @@ export type CreatePersonInput = {
 };
 
 export type UpdatePersonInput = {
+  id: string,
   username?: string | null,
   name?: string | null,
   surname?: string | null,
@@ -96,6 +98,7 @@ export type ModelPrivateNoteFilterInput = {
 };
 
 export type ModelPersonFilterInput = {
+  id?: ModelIDFilterInput | null,
   username?: ModelStringFilterInput | null,
   name?: ModelStringFilterInput | null,
   surname?: ModelStringFilterInput | null,
@@ -195,6 +198,7 @@ export type CreatePersonMutationVariables = {
 export type CreatePersonMutation = {
   createPerson:  {
     __typename: "Person",
+    id: string,
     username: string,
     name: string,
     surname: string,
@@ -209,6 +213,7 @@ export type UpdatePersonMutationVariables = {
 export type UpdatePersonMutation = {
   updatePerson:  {
     __typename: "Person",
+    id: string,
     username: string,
     name: string,
     surname: string,
@@ -223,6 +228,7 @@ export type DeletePersonMutationVariables = {
 export type DeletePersonMutation = {
   deletePerson:  {
     __typename: "Person",
+    id: string,
     username: string,
     name: string,
     surname: string,
@@ -301,6 +307,7 @@ export type GetPersonQueryVariables = {
 export type GetPersonQuery = {
   getPerson:  {
     __typename: "Person",
+    id: string,
     username: string,
     name: string,
     surname: string,
@@ -319,6 +326,7 @@ export type ListPersonsQuery = {
     __typename: "ModelPersonConnection",
     items:  Array< {
       __typename: "Person",
+      id: string,
       username: string,
       name: string,
       surname: string,
@@ -385,6 +393,7 @@ export type OnDeletePrivateNoteSubscription = {
 export type OnCreatePersonSubscription = {
   onCreatePerson:  {
     __typename: "Person",
+    id: string,
     username: string,
     name: string,
     surname: string,
@@ -395,6 +404,7 @@ export type OnCreatePersonSubscription = {
 export type OnUpdatePersonSubscription = {
   onUpdatePerson:  {
     __typename: "Person",
+    id: string,
     username: string,
     name: string,
     surname: string,
@@ -405,6 +415,7 @@ export type OnUpdatePersonSubscription = {
 export type OnDeletePersonSubscription = {
   onDeletePerson:  {
     __typename: "Person",
+    id: string,
     username: string,
     name: string,
     surname: string,

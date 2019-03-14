@@ -51,6 +51,7 @@ export const onDeletePrivateNote = `subscription OnDeletePrivateNote {
 `;
 export const onCreatePerson = `subscription OnCreatePerson {
   onCreatePerson {
+    id
     username
     name
     surname
@@ -60,6 +61,7 @@ export const onCreatePerson = `subscription OnCreatePerson {
 `;
 export const onUpdatePerson = `subscription OnUpdatePerson {
   onUpdatePerson {
+    id
     username
     name
     surname
@@ -69,6 +71,7 @@ export const onUpdatePerson = `subscription OnUpdatePerson {
 `;
 export const onDeletePerson = `subscription OnDeletePerson {
   onDeletePerson {
+    id
     username
     name
     surname

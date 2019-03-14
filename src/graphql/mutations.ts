@@ -51,6 +51,7 @@ export const deletePrivateNote = `mutation DeletePrivateNote($input: DeletePriva
 `;
 export const createPerson = `mutation CreatePerson($input: CreatePersonInput!) {
   createPerson(input: $input) {
+    id
     username
     name
     surname
@@ -60,6 +61,7 @@ export const createPerson = `mutation CreatePerson($input: CreatePersonInput!) {
 `;
 export const updatePerson = `mutation UpdatePerson($input: UpdatePersonInput!) {
   updatePerson(input: $input) {
+    id
     username
     name
     surname
@@ -69,6 +71,7 @@ export const updatePerson = `mutation UpdatePerson($input: UpdatePersonInput!) {
 `;
 export const deletePerson = `mutation DeletePerson($input: DeletePersonInput!) {
   deletePerson(input: $input) {
+    id
     username
     name
     surname

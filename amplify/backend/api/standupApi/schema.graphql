@@ -19,6 +19,7 @@ type PrivateNote @model @auth(rules: [{ allow: owner }]) {
 type Person
     @model
     @auth(rules: [{ allow: groups, groups: ["Admin"], queries: [get, list], mutations: [create, update, delete] }]) {
+    id: ID!
     username: String!
     name: String!
     surname: String!

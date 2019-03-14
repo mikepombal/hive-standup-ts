@@ -49,6 +49,7 @@ export const listPrivateNotes = `query ListPrivateNotes(
 `;
 export const getPerson = `query GetPerson($id: ID!) {
   getPerson(id: $id) {
+    id
     username
     name
     surname
@@ -63,6 +64,7 @@ export const listPersons = `query ListPersons(
 ) {
   listPersons(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
+      id
       username
       name
       surname
