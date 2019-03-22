@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Box, Button, Grid, Grommet, Text } from 'grommet';
 import Auth from '@aws-amplify/auth';
 import Analytics from '@aws-amplify/analytics';
-import { API, graphqlOperation } from 'aws-amplify';
+import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import { withAuthenticator } from 'aws-amplify-react';
 
 import awsconfig from './aws-exports';
@@ -15,7 +15,7 @@ import PeoplePage from './people/PeoplePage';
 Auth.configure(awsconfig);
 // send analytics events to Amazon Pinpoint
 Analytics.configure(awsconfig);
-API.configure(awsconfig);
+Amplify.configure(awsconfig);
 
 const theme = {
     global: {

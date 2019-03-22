@@ -5,8 +5,8 @@ import { Box, Button, CheckBox, Form, FormField, DataTable, Heading, Layer, Text
 import { Checkmark, Close, Edit } from 'grommet-icons';
 
 import * as queries from '../graphql/queries';
+import * as subscriptions from '../graphql/subscriptions';
 import { ListPersonsQuery, GetPersonQuery } from '../API';
-import { getPerson } from '../graphql/queries';
 import { updatePerson } from '../graphql/mutations';
 
 interface Person {
@@ -84,7 +84,23 @@ export default class PeoplePage extends Component<Props, State> {
         const { open, selectedPerson } = this.state;
         return (
             <Box gridArea="main" justify="center" align="center" background="accent-3">
-                <Connect query={graphqlOperation(queries.listPersons)}>
+                <Connect
+                    query={graphqlOperation(queries.listPersons)}
+                    subscription={graphqlOperation(subscriptions.onUpdatePerson)}
+                    // @ts-ignore
+                    onSubscriptionMsg={(prev, { onUpdatePerson }: { onUpdatePerson: Person }) => {
+                        console.log('Subscription data:', prev, onUpdatePerson);
+                        return {
+                            ...prev,
+                            listPersons: {
+                                ...prev.listPersons,
+                                items: prev.listPersons.items.map((p: Person) =>
+                                    p.id === onUpdatePerson.id ? onUpdatePerson : p
+                                ),
+                            },
+                        };
+                    }}
+                >
                     {({ data, loading, error }: ListPersonsQueryType) => {
                         if (error) return <h3>Error</h3>;
                         if (loading || !data.listPersons) return <h3>Loading...</h3>;
