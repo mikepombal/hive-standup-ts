@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { Connect } from 'aws-amplify-react';
 import { Box, Button, CheckBox, Form, FormField, DataTable, Heading, Layer, Text, TextInput } from 'grommet';
-import { Checkmark, Close, Edit } from 'grommet-icons';
+import { Checkmark, Close, Edit, List } from 'grommet-icons';
 
 import * as queries from '../graphql/queries';
 import * as subscriptions from '../graphql/subscriptions';
 import { ListPersonsQuery, GetPersonQuery } from '../API';
-import { updatePerson } from '../graphql/mutations';
+import { createPerson, updatePerson } from '../graphql/mutations';
 
 interface Person {
     id: string;
@@ -23,16 +23,22 @@ interface ListPersonsQueryType {
     error: Array<Error>;
 }
 
+enum FormState {
+    List,
+    Edit,
+    Create,
+}
+
 interface Props {}
 
 interface State {
-    open: boolean;
+    formState: FormState;
     selectedPerson: Person | null;
 }
 
 export default class PeoplePage extends Component<Props, State> {
     state: State = {
-        open: false,
+        formState: FormState.List,
         selectedPerson: null,
     };
 
@@ -52,16 +58,16 @@ export default class PeoplePage extends Component<Props, State> {
         {
             property: 'active',
             header: 'Is Active',
-            render: (datum: Person) => (datum.active ? <Checkmark /> : null),
+            render: (person: Person) => (person.active ? <Checkmark /> : null),
         },
         {
             property: 'id',
             header: 'Edit',
-            render: (datum: Person) => <Button icon={<Edit />} onClick={() => this.showForm(datum)} />,
+            render: (person: Person) => <Button icon={<Edit />} onClick={() => this.editPerson(person)} />,
         },
     ];
 
-    update = async (person: Person) => {
+    updatePersonData = async (person: Person) => {
         console.log('Update me');
         const result = await API.graphql(graphqlOperation(updatePerson, { input: person }));
         // @ts-ignore
@@ -70,18 +76,31 @@ export default class PeoplePage extends Component<Props, State> {
         }
     };
 
-    showForm = (person?: Person) => {
-        if (person) {
-            this.setState({ open: true, selectedPerson: person });
+    createPersonData = async (person: Person) => {
+        console.log('Create Person Data', person);
+        const result = await API.graphql(graphqlOperation(createPerson, { input: person }));
+        // @ts-ignore
+        if (!result.error) {
+            this.onClose();
         }
     };
 
+    editPerson = (person?: Person) => {
+        if (person) {
+            this.setState({ formState: FormState.Edit, selectedPerson: person });
+        }
+    };
+
+    addPerson = () => {
+        this.setState({ formState: FormState.Create, selectedPerson: null });
+    };
+
     onClose = () => {
-        this.setState({ open: false });
+        this.setState({ formState: FormState.List });
     };
 
     render() {
-        const { open, selectedPerson } = this.state;
+        const { formState, selectedPerson } = this.state;
         return (
             <Box gridArea="main" justify="center" align="center" background="accent-3">
                 <Connect
@@ -125,7 +144,7 @@ export default class PeoplePage extends Component<Props, State> {
                         return <DataTable columns={this.columns} data={list} size="medium" />;
                     }}
                 </Connect>
-                {open && (
+                {(formState === FormState.Edit || formState === FormState.Create) && (
                     <Layer position="right" full="vertical" modal onClickOutside={this.onClose} onEsc={this.onClose}>
                         <Box fill="vertical" overflow="auto" width="medium" pad="medium">
                             <Box flex={false} direction="row" justify="between">
@@ -137,7 +156,11 @@ export default class PeoplePage extends Component<Props, State> {
                             <Form
                                 value={selectedPerson || {}}
                                 // @ts-ignore
-                                onSubmit={({ value }) => this.update(value)}
+                                onSubmit={({ value }) =>
+                                    formState === FormState.Edit
+                                        ? this.updatePersonData(value)
+                                        : this.createPersonData(value)
+                                }
                             >
                                 <FormField label="GitHub Username" name="username" required />
                                 <FormField label="Name" name="name" required />
@@ -146,12 +169,17 @@ export default class PeoplePage extends Component<Props, State> {
                                 <FormField component={CheckBox} label="Active" name="active" />
                                 <Box direction="row" justify="between" margin={{ top: 'medium' }}>
                                     <Button label="Cancel" onClick={this.onClose} />
-                                    <Button type="submit" label="Update" primary />
+                                    <Button
+                                        type="submit"
+                                        label={formState === FormState.Edit ? 'Update' : 'Create'}
+                                        primary
+                                    />
                                 </Box>
                             </Form>
                         </Box>
                     </Layer>
                 )}
+                <Button label="Add new person" onClick={this.addPerson} />
             </Box>
         );
     }
