@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { Connect } from 'aws-amplify-react';
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
 import { Box, Button, CheckBox, Form, FormField, DataTable, Heading, Layer, Text, TextInput } from 'grommet';
 import { Checkmark, Close, Edit, List } from 'grommet-icons';
 
 import * as queries from '../graphql/queries';
 import * as subscriptions from '../graphql/subscriptions';
-import { ListPersonsQuery, GetPersonQuery } from '../API';
+import { ListPersonsQuery, ListPersonsQueryVariables, GetPersonQuery, GetPersonQueryVariables } from '../API';
 import { createPerson, updatePerson } from '../graphql/mutations';
+import PeopleList from './PeopleList';
 
 interface Person {
     id: string;
@@ -68,7 +70,6 @@ export default class PeoplePage extends Component<Props, State> {
     ];
 
     updatePersonData = async (person: Person) => {
-        console.log('Update me');
         const result = await API.graphql(graphqlOperation(updatePerson, { input: person }));
         // @ts-ignore
         if (!result.error) {
@@ -77,7 +78,6 @@ export default class PeoplePage extends Component<Props, State> {
     };
 
     createPersonData = async (person: Person) => {
-        console.log('Create Person Data', person);
         const result = await API.graphql(graphqlOperation(createPerson, { input: person }));
         // @ts-ignore
         if (!result.error) {
@@ -89,6 +89,26 @@ export default class PeoplePage extends Component<Props, State> {
         if (person) {
             this.setState({ formState: FormState.Edit, selectedPerson: person });
         }
+    };
+
+    // @ts-ignore
+    subscribeToPersonListChange = subscribeToMore => {
+        subscribeToMore({
+            document: gql(subscriptions.onCreatePerson),
+            // @ts-ignore
+            updateQuery: (prev, { subscriptionData }) => {
+                console.log('Subscription data:', prev, { subscriptionData });
+                if (!subscriptionData.data) return prev;
+                const newPersonData = subscriptionData.data.onCreatePerson;
+                return Object.assign({}, prev, {
+                    listPersons: {
+                        ...prev.listPersons,
+                        items: [...prev.listPersons.items, newPersonData],
+                    },
+                });
+            },
+        });
+        subscribeToMore({ document: gql(subscriptions.onUpdatePerson) });
     };
 
     addPerson = () => {
@@ -103,47 +123,21 @@ export default class PeoplePage extends Component<Props, State> {
         const { formState, selectedPerson } = this.state;
         return (
             <Box gridArea="main" justify="center" align="center" background="accent-3">
-                <Connect
-                    query={graphqlOperation(queries.listPersons)}
-                    subscription={graphqlOperation(subscriptions.onUpdatePerson)}
-                    // @ts-ignore
-                    onSubscriptionMsg={(prev, { onUpdatePerson }: { onUpdatePerson: Person }) => {
-                        console.log('Subscription data:', prev, onUpdatePerson);
-                        return {
-                            ...prev,
-                            listPersons: {
-                                ...prev.listPersons,
-                                items: prev.listPersons.items.map((p: Person) =>
-                                    p.id === onUpdatePerson.id ? onUpdatePerson : p
-                                ),
-                            },
-                        };
-                    }}
-                >
-                    {({ data, loading, error }: ListPersonsQueryType) => {
-                        if (error) return <h3>Error</h3>;
-                        if (loading || !data.listPersons) return <h3>Loading...</h3>;
+                <Query<ListPersonsQuery, ListPersonsQueryVariables> query={gql(queries.listPersons)}>
+                    {({ loading, data, error, subscribeToMore }) => {
+                        if (loading) return <p>loading...</p>;
+                        if (error) return <p>{error.message}</p>;
+                        if (!data) return <p>No data</p>;
 
-                        const ttt = data.listPersons.items || [];
-                        const list = ttt.reduce(
-                            (acc: Array<Person>, item) =>
-                                item
-                                    ? [
-                                          ...acc,
-                                          {
-                                              id: item.id,
-                                              username: item.username,
-                                              name: item.name,
-                                              surname: item.surname,
-                                              active: item.active,
-                                          },
-                                      ]
-                                    : acc,
-                            []
+                        return (
+                            <PeopleList
+                                data={data}
+                                editPerson={this.editPerson}
+                                subscribeToMore={() => this.subscribeToPersonListChange(subscribeToMore)}
+                            />
                         );
-                        return <DataTable columns={this.columns} data={list} size="medium" />;
                     }}
-                </Connect>
+                </Query>
                 {(formState === FormState.Edit || formState === FormState.Create) && (
                     <Layer position="right" full="vertical" modal onClickOutside={this.onClose} onEsc={this.onClose}>
                         <Box fill="vertical" overflow="auto" width="medium" pad="medium">

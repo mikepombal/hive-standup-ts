@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { Box, Button, Grid, Grommet, Text } from 'grommet';
 import Auth from '@aws-amplify/auth';
 import Analytics from '@aws-amplify/analytics';
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import Amplify from 'aws-amplify';
 import { withAuthenticator } from 'aws-amplify-react';
+import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
+import { ApolloProvider } from 'react-apollo';
 
 import awsconfig from './aws-exports';
 import * as queries from './graphql/queries';
@@ -16,6 +18,15 @@ Auth.configure(awsconfig);
 // send analytics events to Amazon Pinpoint
 Analytics.configure(awsconfig);
 Amplify.configure(awsconfig);
+
+const client = new AWSAppSyncClient({
+    url: awsconfig.aws_appsync_graphqlEndpoint,
+    region: awsconfig.aws_appsync_region,
+    auth: {
+        type: AUTH_TYPE.AMAZON_COGNITO_USER_POOLS,
+        jwtToken: async () => (await Auth.currentSession()).getIdToken().getJwtToken(),
+    },
+});
 
 const theme = {
     global: {
@@ -50,74 +61,47 @@ class App extends Component<Props, State> {
         console.log('Logged out');
     };
 
-    getTasksList = async () => {
-        const allTasks = await API.graphql(graphqlOperation(queries.listTasks));
-        console.log('Get the list of tasks', allTasks);
-        const oneTask = await API.graphql(
-            graphqlOperation(queries.getTask, { id: 'deb60986-4bcf-441b-b3c6-ef5af31a232a' })
-        );
-        console.log('Get the task', oneTask);
-    };
-
-    createTask = async () => {
-        const task = {
-            title: 'This task is for Alex',
-            description: 'Steve gerard...',
-        };
-        const newTask = await API.graphql(graphqlOperation(mutations.createTask, { input: task }));
-        console.log(newTask);
-    };
-
-    createPerson = async () => {
-        const person = {
-            username: 'mikepombal',
-            name: 'Mickael',
-            surname: 'Marques',
-            active: true,
-        };
-        const newPerson = await API.graphql(graphqlOperation(mutations.createPerson, { input: person }));
-        console.log(newPerson);
-    };
-
     render() {
         return (
-            <Grommet full theme={theme}>
-                <Grid
-                    fill
-                    rows={['auto', 'flex']}
-                    columns={['auto', 'flex']}
-                    areas={[
-                        { name: 'header', start: [0, 0], end: [1, 0] },
-                        { name: 'sidebar', start: [0, 1], end: [0, 1] },
-                        { name: 'main', start: [1, 1], end: [1, 1] },
-                    ]}
-                >
-                    <Box
-                        gridArea="header"
-                        direction="row"
-                        align="center"
-                        justify="between"
-                        pad={{ horizontal: 'medium', vertical: 'small' }}
-                        background="brand"
+            <ApolloProvider client={client}>
+                <Grommet full theme={theme}>
+                    <Grid
+                        fill
+                        rows={['auto', 'flex']}
+                        columns={['auto', 'flex']}
+                        areas={[
+                            { name: 'header', start: [0, 0], end: [1, 0] },
+                            { name: 'sidebar', start: [0, 1], end: [0, 1] },
+                            { name: 'main', start: [1, 1], end: [1, 1] },
+                        ]}
                     >
-                        <Text size="large">Standup</Text>
-                        <Button label="Log out" onClick={this.logout} />
-                    </Box>
+                        <Box
+                            gridArea="header"
+                            direction="row"
+                            align="center"
+                            justify="between"
+                            pad={{ horizontal: 'medium', vertical: 'small' }}
+                            background="brand"
+                        >
+                            <Text size="large">Standup</Text>
+                            <Button label="Log out" onClick={this.logout} />
+                        </Box>
 
-                    <Box gridArea="sidebar" background="accent-2" width="small">
-                        {[].map(name => (
-                            <Button key={name} href="#" hoverIndicator>
-                                <Box pad={{ horizontal: 'medium', vertical: 'small' }}>
-                                    <Text>{name}</Text>
-                                </Box>
-                            </Button>
-                        ))}
-                    </Box>
-                    <Box gridArea="main" justify="center" align="center" background="accent-3">
-                        <PeoplePage />
-                    </Box>
-                </Grid>
-            </Grommet>
+                        <Box gridArea="sidebar" background="accent-2" width="small">
+                            {[].map(name => (
+                                <Button key={name} href="#" hoverIndicator>
+                                    <Box pad={{ horizontal: 'medium', vertical: 'small' }}>
+                                        <Text>{name}</Text>
+                                    </Box>
+                                </Button>
+                            ))}
+                        </Box>
+                        <Box gridArea="main" justify="center" align="center" background="accent-3">
+                            <PeoplePage />
+                        </Box>
+                    </Grid>
+                </Grommet>
+            </ApolloProvider>
         );
     }
 }
